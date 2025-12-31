@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freundesgruppe Video Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #E50914;
+            --dark-bg: #141414;
+            --darker-bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --hover-bg: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* ============================================
+           PROFILE SELECTION SCREEN
+           ============================================ */
+        #profile-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+        }
+
+        .profile-header {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.5rem;
+            letter-spacing: 4px;
+            margin-bottom: 60px;
+            text-align: center;
+            background: linear-gradient(90deg, #E50914, #ff4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .profile-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #E50914, #b20710);
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .profile-card:hover .profile-avatar {
+            border-color: var(--text-primary);
+            transform: scale(1.08);
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+            font-weight: 400;
+        }
+
+        .profile-card:hover .profile-name {
+            color: var(--text-primary);
+        }
+
+        /* Password Modal */
+        .password-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .password-modal.active {
+            display: flex;
+        }
+
+        .password-content {
+            background: var(--card-bg);
+            padding: 50px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            animation: scaleIn 0.4s ease;
+        }
+
+        .password-content h2 {
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            background: var(--darker-bg);
+            border: 2px solid var(--hover-bg);
+            color: var(--text-primary);
+            border-radius: 6px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+
+        .password-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #f40612;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: #3a3a3a;
+        }
+
+        .error-message {
+            color: var(--primary-red);
+            margin-top: 10px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+            animation: shake 0.5s ease;
+        }
+
+        /* ============================================
+           NETFLIX INTRO ANIMATION
+           ============================================ */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            overflow: hidden;
+        }
+
+        #intro-screen.active {
+            display: flex;
+        }
+
+        .intro-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .intro-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 15vw;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            color: var(--primary-red);
+            position: relative;
+            z-index: 3;
+            animation: introAnimation 3.5s cubic-bezier(0.87, 0, 0.13, 1);
+        }
+
+        /* Colored bars behind the logo */
+        .intro-bar {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transform-origin: center;
+            animation: barAnimation 3.5s cubic-bezier(0.87, 0, 0.13, 1);
+        }
+
+        .bar-1 { 
+            background: linear-gradient(90deg, #E50914 0%, #E50914 100%);
+            animation-delay: 0s;
+            z-index: 1;
+        }
+        .bar-2 { 
+            background: linear-gradient(90deg, #DB0510 0%, #DB0510 100%);
+            animation-delay: 0.05s;
+            z-index: 1;
+        }
+        .bar-3 { 
+            background: linear-gradient(90deg, #C9050F 0%, #C9050F 100%);
+            animation-delay: 0.1s;
+            z-index: 1;
+        }
+        .bar-4 { 
+            background: linear-gradient(90deg, #B7040E 0%, #B7040E 100%);
+            animation-delay: 0.15s;
+            z-index: 1;
+        }
+        .bar-5 { 
+            background: linear-gradient(90deg, #A5040C 0%, #A5040C 100%);
+            animation-delay: 0.2s;
+            z-index: 1;
+        }
+        .bar-6 { 
+            background: linear-gradient(90deg, #8B0309 0%, #8B0309 100%);
+            animation-delay: 0.25s;
+            z-index: 1;
+        }
+
+        @keyframes introAnimation {
+            0% {
+                transform: scale(0.2);
+                opacity: 0;
+            }
+            20% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            70% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(8);
+                opacity: 0;
+            }
+        }
+
+        @keyframes barAnimation {
+            0% {
+                transform: scaleX(0) scaleY(1);
+                opacity: 0;
+            }
+            15% {
+                transform: scaleX(0.3) scaleY(1);
+                opacity: 1;
+            }
+            35% {
+                transform: scaleX(1) scaleY(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scaleX(1) scaleY(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scaleX(3) scaleY(3);
+                opacity: 0;
+            }
+        }
+
+        /* ============================================
+           MAIN LIBRARY SCREEN
+           ============================================ */
+        #main-screen {
+            display: none;
+            min-height: 100vh;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        #main-screen.active {
+            display: block;
+        }
+
+        /* Hero/Featured Section */
+        .hero-section {
+            position: relative;
+            height: 80vh;
+            min-height: 500px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 80%, #141414 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 0 4%;
+            margin-bottom: 20px;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        .hero-background::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, transparent 50%, rgba(0,0,0,0.8) 100%),
+                        linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);
+        }
+
+        .hero-content {
+            max-width: 600px;
+            margin-bottom: 100px;
+            z-index: 2;
+        }
+
+        .hero-logo {
+            margin-bottom: 20px;
+        }
+
+        .hero-logo img {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .hero-match {
+            color: #46d369;
+            font-weight: 700;
+        }
+
+        .hero-year,
+        .hero-seasons {
+            color: var(--text-secondary);
+        }
+
+        .hero-quality {
+            border: 1px solid var(--text-secondary);
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            max-width: 500px;
+        }
+
+        .hero-cast {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .hero-btn-play {
+            background: white;
+            color: black;
+        }
+
+        .hero-btn-play:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .hero-btn-info {
+            background: rgba(109, 109, 110, 0.7);
+            color: white;
+        }
+
+        .hero-btn-info:hover {
+            background: rgba(109, 109, 110, 0.5);
+        }
+
+        /* Header / Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+            padding: 20px 4%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            transition: background 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: var(--darker-bg);
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary-red);
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text-primary);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-icon,
+        .profile-icon {
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .search-icon:hover,
+        .profile-icon:hover {
+            color: var(--primary-red);
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: fixed;
+            top: 80px;
+            right: 4%;
+            width: 300px;
+            z-index: 99;
+            transform: translateY(-20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-container.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid var(--hover-bg);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+
+        /* Filter Buttons */
+        .filter-container {
+            padding: 100px 4% 30px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            background: var(--card-bg);
+            border: 2px solid var(--hover-bg);
+            color: var(--text-secondary);
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-red);
+            color: white;
+            border-color: var(--primary-red);
+            transform: translateY(-2px);
+        }
+
+        /* Movie Rows */
+        .content-section {
+            padding: 30px 4%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .movie-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 8px;
+            margin-bottom: 50px;
+        }
+
+        .movie-card {
+            background: var(--card-bg);
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.08);
+            z-index: 10;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+        }
+
+        .movie-card:hover .movie-overlay {
+            opacity: 1;
+        }
+
+        .movie-thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--text-secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .movie-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-info {
+            padding: 12px;
+            background: var(--card-bg);
+        }
+
+        .movie-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .movie-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        .movie-year {
+            color: var(--text-secondary);
+        }
+
+        .movie-category {
+            background: rgba(229, 9, 20, 0.2);
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            color: var(--primary-red);
+            border: 1px solid rgba(229, 9, 20, 0.4);
+        }
+
+        .movie-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
+            padding: 40px 12px 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .overlay-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .overlay-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background: rgba(42, 42, 42, 0.8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            pointer-events: all;
+        }
+
+        .overlay-btn:hover {
+            border-color: white;
+            background: rgba(42, 42, 42, 0.95);
+            transform: scale(1.1);
+        }
+
+        .overlay-btn.play-btn {
+            background: white;
+            color: black;
+            border-color: white;
+        }
+
+        .overlay-btn.play-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .overlay-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.9);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .movie-card:hover .play-icon {
+            opacity: 1;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Video Player Modal */
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .video-modal.active {
+            display: flex;
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--darker-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .video-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+        }
+
+        .video-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .close-video {
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .close-video:hover {
+            color: var(--text-primary);
+        }
+
+        .video-player {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: black;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile-header {
+                font-size: 2.5rem;
+            }
+
+            .profile-avatar {
+                width: 120px;
+                height: 120px;
+                font-size: 3rem;
+            }
+
+            .navbar {
+                padding: 15px 4%;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .search-container {
+                width: 90%;
+                right: 5%;
+            }
+
+            .filter-container {
+                padding: 80px 4% 20px;
+            }
+
+            .hero-section {
+                height: 60vh;
+                min-height: 400px;
+            }
+
+            .hero-content {
+                margin-bottom: 60px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-description {
+                font-size: 0.95rem;
+                max-width: 100%;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .hero-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .movie-row {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 8px;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .intro-logo {
+                font-size: 20vw;
+            }
+
+            .movie-overlay {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .password-content {
+                padding: 30px;
+            }
+
+            .movie-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-title {
+                font-size: 1.5rem;
+            }
+
+            .hero-description {
+                font-size: 0.85rem;
+            }
+
+            .hero-cast {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+         PROFILE SELECTION SCREEN
+         ============================================ -->
+    <div id="profile-screen">
+        <h1 class="profile-header">Wer schaut zu?</h1>
+        <div class="profile-container">
+            <div class="profile-card" onclick="showPasswordModal()">
+                <div class="profile-avatar">🎬</div>
+                <div class="profile-name">Freundesgruppe</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-content">
+            <h2>Passwort eingeben</h2>
+            <input 
+                type="password" 
+                id="passwordInput" 
+                class="password-input" 
+                placeholder="Passwort"
+                onkeypress="handlePasswordKeypress(event)"
+            >
+            <div class="password-buttons">
+                <button class="btn btn-secondary" onclick="closePasswordModal()">Abbrechen</button>
+                <button class="btn btn-primary" onclick="checkPassword()">Weiter</button>
+            </div>
+            <div class="error-message" id="errorMessage">Falsches Passwort!</div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         INTRO ANIMATION
+         ============================================ -->
+    <div id="intro-screen">
+        <div class="intro-container">
+            <div class="intro-bar bar-1"></div>
+            <div class="intro-bar bar-2"></div>
+            <div class="intro-bar bar-3"></div>
+            <div class="intro-bar bar-4"></div>
+            <div class="intro-bar bar-5"></div>
+            <div class="intro-bar bar-6"></div>
+            <div class="intro-logo">F</div>
+        </div>
+    </div>
+
+    <!-- Intro Sound -->
+    <audio id="introSound" preload="auto">
+        <source src="sounds/intro.mp3" type="audio/mpeg">
+        <!--<source src="sounds/intro-sound.ogg" type="audio/ogg">-->
+    </audio>
+
+    <!-- ============================================
+         MAIN LIBRARY SCREEN
+         ============================================ -->
+    <div id="main-screen">
+        <!-- Navigation Bar -->
+        <nav class="navbar" id="navbar">
+            <div class="logo">FRIENDS FLIX</div>
+            <ul class="nav-links">
+                <li><a href="#" class="active" onclick="filterByCategory('all')">Startseite</a></li>
+                <li><a href="#" onclick="filterByCategory('Jahresrückblick')">Jahresrückblicke</a></li>
+                <li><a href="#" onclick="filterByCategory('Events')">Events</a></li>
+                <li><a href="#" onclick="filterByCategory('Reisen')">Reisen</a></li>
+                <li><a href="#" onclick="filterByCategory('Geburtstage')">Geburtstage</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="search-icon" onclick="toggleSearch()">🔍</div>
+                <div class="profile-icon" onclick="logout()">👤</div>
+            </div>
+        </nav>
+
+        <!-- Search Bar -->
+        <div class="search-container" id="searchContainer">
+            <input 
+                type="text" 
+                class="search-bar" 
+                id="searchBar" 
+                placeholder="Titel, Kategorien, Jahr..."
+                oninput="searchMovies()"
+            >
+        </div>
+
+        <!-- Hero/Featured Section -->
+        <div class="hero-section" id="heroSection">
+            <div class="hero-background" id="heroBackground"></div>
+            <div class="hero-content">
+                <div class="hero-title" id="heroTitle"></div>
+                <div class="hero-meta">
+                    <span class="hero-match" id="heroMatch">98% Match</span>
+                    <span class="hero-year" id="heroYear"></span>
+                    <span class="hero-quality">ULTRA HD 4K</span>
+                    <span class="hero-quality">5.1</span>
+                </div>
+                <div class="hero-description" id="heroDescription"></div>
+                <div class="hero-cast" id="heroCast"></div>
+                <div class="hero-buttons">
+                    <button class="hero-btn hero-btn-play" onclick="playHeroVideo()">
+                        <span>▶</span> Abspielen
+                    </button>
+                    <button class="hero-btn hero-btn-info" onclick="showHeroInfo()">
+                        <span>ℹ</span> Weitere Infos
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterByCategory('all')">Alle</button>
+            <button class="filter-btn" onclick="filterByCategory('Jahresrückblick')">Jahresrückblick</button>
+            <button class="filter-btn" onclick="filterByCategory('Events')">Events</button>
+            <button class="filter-btn" onclick="filterByCategory('Reisen')">Reisen</button>
+            <button class="filter-btn" onclick="filterByCategory('Geburtstage')">Geburtstage</button>
+        </div>
+
+        <!-- Content Sections -->
+        <div id="contentContainer">
+            <!-- Movies will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-container">
+            <div class="video-header">
+                <div class="video-title" id="videoTitle"></div>
+                <div class="close-video" onclick="closeVideo()">✕</div>
+            </div>
+            <video id="videoPlayer" class="video-player" controls>
+                Dein Browser unterstützt das Video-Tag nicht.
+            </video>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - HIER KANNST DU FILME HINZUFÜGEN
+        // ============================================
+        
+        // PASSWORT ÄNDERN (Standard: "2025")
+        const CORRECT_PASSWORD = "2025";
+
+        // FILME HINZUFÜGEN - Kopiere einfach einen Film-Block und ändere die Daten
+        const movies = [
+            // Film 1
+            {
+                title: "Jahresrückblick 2025",
+                year: 2025,
+                category: "Jahresrückblick",
+                description: "Ein unvergessliches Jahr voller Abenteuer, Lachen und besonderer Momente. Erlebe die Highlights unserer Freundesgruppe in diesem emotionalen Jahresrückblick.",
+                videoPath: "videos/2025.mp4", // Pfad zu deinem Video
+                thumbnail: "thumbnails/2025.png", // Optional: Pfad zum Thumbnail
+                featured: true // Setze auf true für Featured/Hero Anzeige
+            },
+
+            // Film 2
+            {
+                title: "Ramonski Geburtstag",
+                year: 2025,
+                category: "Geburtstage",
+                description: "19 Jahre Ramonski, schau dir das Geburtstagsvideo zu Ramons 19ten Geburtstag an",
+                videoPath: "videos/ramonski.mp4",
+                thumbnail: "thumbnails/ramon.png"
+            },
+
+            
+            // FÜGE HIER NEUE FILME HINZU:
+            // Kopiere einfach den Block oben und ändere die Werte
+            /*
+            {
+                title: "Dein Film Titel",
+                year: 2025,
+                category: "Jahresrückblick", // oder: Events, Reisen, Spaß
+                description: "Eine kurze Beschreibung deines Films",
+                videoPath: "videos/dein-video.mp4",
+                thumbnail: "thumbnails/dein-bild.jpg",
+                featured: true // Optional: für Hero-Section
+            },
+            */
+        ];
+
+        // ============================================
+        // APP LOGIC - NICHT ÄNDERN (außer du weißt was du tust)
+        // ============================================
+        
+        let currentFilter = 'all';
+        let searchTerm = '';
+
+        // Password Modal
+        function showPasswordModal() {
+            document.getElementById('passwordModal').classList.add('active');
+            document.getElementById('passwordInput').focus();
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('active');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('errorMessage').classList.remove('active');
+        }
+
+        function handlePasswordKeypress(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        }
+
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            const errorMsg = document.getElementById('errorMessage');
+            
+            if (password === CORRECT_PASSWORD) {
+                closePasswordModal();
+                showIntro();
+            } else {
+                errorMsg.classList.add('active');
+                document.getElementById('passwordInput').value = '';
+                setTimeout(() => {
+                    errorMsg.classList.remove('active');
+                }, 3000);
+            }
+        }
+
+        // Intro Animation
+        function showIntro() {
+            document.getElementById('profile-screen').style.display = 'none';
+            const introScreen = document.getElementById('intro-screen');
+            const introSound = document.getElementById('introSound');
+            
+            introScreen.classList.add('active');
+            
+            // Play intro sound
+            introSound.play().catch(error => {
+                console.log('Sound konnte nicht abgespielt werden:', error);
+            });
+            
+            setTimeout(() => {
+                introScreen.classList.remove('active');
+                showMainScreen();
+            }, 3500);
+        }
+
+        function showMainScreen() {
+            document.getElementById('main-screen').classList.add('active');
+            setupHeroSection();
+            renderMovies();
+        }
+
+        // Hero Section
+        function setupHeroSection() {
+            const featuredMovie = movies.find(m => m.featured) || movies[0];
+            
+            const heroTitle = document.getElementById('heroTitle');
+            const heroYear = document.getElementById('heroYear');
+            const heroDescription = document.getElementById('heroDescription');
+            const heroBackground = document.getElementById('heroBackground');
+            
+            heroTitle.textContent = featuredMovie.title;
+            heroYear.textContent = featuredMovie.year;
+            heroDescription.textContent = featuredMovie.description || 'Ein unvergessliches Video aus unserer Sammlung.';
+            
+            if (featuredMovie.thumbnail) {
+                heroBackground.style.backgroundImage = `url(${featuredMovie.thumbnail})`;
+            } else {
+                heroBackground.style.background = 'linear-gradient(135deg, #1a1a1a, #0a0a0a)';
+            }
+        }
+
+        function playHeroVideo() {
+            const featuredMovie = movies.find(m => m.featured) || movies[0];
+            playVideo(featuredMovie.videoPath, featuredMovie.title);
+        }
+
+        function showHeroInfo() {
+            const featuredMovie = movies.find(m => m.featured) || movies[0];
+            alert(`${featuredMovie.title}\n\nJahr: ${featuredMovie.year}\nKategorie: ${featuredMovie.category}\n\n${featuredMovie.description || 'Keine weitere Beschreibung verfügbar.'}`);
+        }
+
+        // Navigation
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        function logout() {
+            if (confirm('Möchtest du dich wirklich abmelden?')) {
+                document.getElementById('main-screen').classList.remove('active');
+                document.getElementById('profile-screen').style.display = 'flex';
+                currentFilter = 'all';
+                searchTerm = '';
+            }
+        }
+
+        // Search
+        function toggleSearch() {
+            const searchContainer = document.getElementById('searchContainer');
+            const searchBar = document.getElementById('searchBar');
+            searchContainer.classList.toggle('active');
+            if (searchContainer.classList.contains('active')) {
+                searchBar.focus();
+            } else {
+                searchBar.value = '';
+                searchTerm = '';
+                renderMovies();
+            }
+        }
+
+        function searchMovies() {
+            searchTerm = document.getElementById('searchBar').value.toLowerCase();
+            renderMovies();
+        }
+
+        // Filter
+        function filterByCategory(category) {
+            currentFilter = category;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update nav links
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            renderMovies();
+        }
+
+        // Render Movies
+        function renderMovies() {
+            const container = document.getElementById('contentContainer');
+            
+            // Filter movies
+            let filteredMovies = movies.filter(movie => {
+                const matchesCategory = currentFilter === 'all' || movie.category === currentFilter;
+                const matchesSearch = searchTerm === '' || 
+                    movie.title.toLowerCase().includes(searchTerm) ||
+                    movie.category.toLowerCase().includes(searchTerm) ||
+                    movie.year.toString().includes(searchTerm);
+                
+                return matchesCategory && matchesSearch;
+            });
+            
+            if (filteredMovies.length === 0) {
+                container.innerHTML = '<div class="no-results">Keine Videos gefunden 😕</div>';
+                return;
+            }
+            
+            // Group by category
+            const moviesByCategory = {};
+            filteredMovies.forEach(movie => {
+                if (!moviesByCategory[movie.category]) {
+                    moviesByCategory[movie.category] = [];
+                }
+                moviesByCategory[movie.category].push(movie);
+            });
+            
+            // Render
+            let html = '';
+            for (const [category, categoryMovies] of Object.entries(moviesByCategory)) {
+                html += `
+                    <div class="content-section">
+                        <h2 class="section-title">${category}</h2>
+                        <div class="movie-row">
+                `;
+                
+                categoryMovies.forEach((movie, index) => {
+                    const thumbnailContent = movie.thumbnail 
+                        ? `<img src="${movie.thumbnail}" alt="${movie.title}">`
+                        : '🎬';
+                    
+                    html += `
+                        <div class="movie-card" onclick="playVideo('${movie.videoPath}', '${movie.title}')">
+                            <div class="movie-thumbnail">
+                                ${thumbnailContent}
+                                <div class="play-icon">▶</div>
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie-title">${movie.title}</div>
+                                <div class="movie-meta">
+                                    <span class="movie-year">${movie.year}</span>
+                                    <span class="movie-category">${movie.category}</span>
+                                </div>
+                            </div>
+                            <div class="movie-overlay">
+                                <div class="overlay-buttons">
+                                    <div class="overlay-btn play-btn" onclick="event.stopPropagation(); playVideo('${movie.videoPath}', '${movie.title}')">▶</div>
+                                    <div class="overlay-btn" onclick="event.stopPropagation(); addToList('${movie.title}')">+</div>
+                                    <div class="overlay-btn" onclick="event.stopPropagation(); likeMovie('${movie.title}')">👍</div>
+                                </div>
+                                <div class="overlay-info">
+                                    ${movie.description ? movie.description.substring(0, 80) + '...' : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Video Player
+        function playVideo(videoPath, title) {
+            const modal = document.getElementById('videoModal');
+            const player = document.getElementById('videoPlayer');
+            const videoTitle = document.getElementById('videoTitle');
+            
+            videoTitle.textContent = title;
+            player.src = videoPath;
+            modal.classList.add('active');
+            player.play();
+        }
+
+        function closeVideo() {
+            const modal = document.getElementById('videoModal');
+            const player = document.getElementById('videoPlayer');
+            
+            player.pause();
+            player.src = '';
+            modal.classList.remove('active');
+        }
+
+        // Helper functions for overlay buttons
+        function addToList(title) {
+            alert(`"${title}" wurde zu deiner Liste hinzugefügt!`);
+        }
+
+        function likeMovie(title) {
+            alert(`Dir gefällt "${title}"! 👍`);
+        }
+
+        // Close video on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const videoModal = document.getElementById('videoModal');
+                const passwordModal = document.getElementById('passwordModal');
+                
+                if (videoModal.classList.contains('active')) {
+                    closeVideo();
+                }
+                if (passwordModal.classList.contains('active')) {
+                    closePasswordModal();
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
