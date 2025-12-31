@@ -239,7 +239,7 @@
             animation: introAnimation 3.5s cubic-bezier(0.87, 0, 0.13, 1);
         }
 
-        /* Colored bars behind the logo */
+        /* Colored bars behind the logo - Enhanced Netflix style */
         .intro-bar {
             position: absolute;
             width: 100%;
@@ -248,37 +248,56 @@
             left: 0;
             transform-origin: center;
             animation: barAnimation 3.5s cubic-bezier(0.87, 0, 0.13, 1);
+            filter: blur(0px);
         }
 
         .bar-1 { 
-            background: linear-gradient(90deg, #E50914 0%, #E50914 100%);
+            background: linear-gradient(90deg, #E50914 0%, #ff1a1a 50%, #E50914 100%);
             animation-delay: 0s;
             z-index: 1;
+            box-shadow: 0 0 80px rgba(229, 9, 20, 0.8);
         }
         .bar-2 { 
-            background: linear-gradient(90deg, #DB0510 0%, #DB0510 100%);
+            background: linear-gradient(90deg, #DB0510 0%, #f01015 50%, #DB0510 100%);
             animation-delay: 0.05s;
             z-index: 1;
+            box-shadow: 0 0 70px rgba(219, 5, 16, 0.7);
         }
         .bar-3 { 
-            background: linear-gradient(90deg, #C9050F 0%, #C9050F 100%);
+            background: linear-gradient(90deg, #C9050F 0%, #e00812 50%, #C9050F 100%);
             animation-delay: 0.1s;
             z-index: 1;
+            box-shadow: 0 0 60px rgba(201, 5, 15, 0.6);
         }
         .bar-4 { 
-            background: linear-gradient(90deg, #B7040E 0%, #B7040E 100%);
+            background: linear-gradient(90deg, #B7040E 0%, #d00510 50%, #B7040E 100%);
             animation-delay: 0.15s;
             z-index: 1;
+            box-shadow: 0 0 50px rgba(183, 4, 14, 0.5);
         }
         .bar-5 { 
-            background: linear-gradient(90deg, #A5040C 0%, #A5040C 100%);
+            background: linear-gradient(90deg, #A5040C 0%, #c0050e 50%, #A5040C 100%);
             animation-delay: 0.2s;
             z-index: 1;
+            box-shadow: 0 0 40px rgba(165, 4, 12, 0.4);
         }
         .bar-6 { 
-            background: linear-gradient(90deg, #8B0309 0%, #8B0309 100%);
+            background: linear-gradient(90deg, #8B0309 0%, #a0040b 50%, #8B0309 100%);
             animation-delay: 0.25s;
             z-index: 1;
+            box-shadow: 0 0 30px rgba(139, 3, 9, 0.3);
+        }
+        .bar-7 { 
+            background: linear-gradient(90deg, #710308 0%, #850309 50%, #710308 100%);
+            animation-delay: 0.3s;
+            z-index: 1;
+            box-shadow: 0 0 20px rgba(113, 3, 8, 0.2);
+        }
+        .bar-8 { 
+            background: linear-gradient(90deg, #5a0206 0%, #6a0207 50%, #5a0206 100%);
+            animation-delay: 0.35s;
+            z-index: 1;
+            box-shadow: 0 0 10px rgba(90, 2, 6, 0.1);
         }
 
         @keyframes introAnimation {
@@ -829,6 +848,215 @@
             background: black;
         }
 
+        /* Progress Bar for Videos */
+        .progress-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .movie-card:hover .progress-bar-container {
+            opacity: 1;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-red);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Info Modal */
+        .info-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1500;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .info-modal.active {
+            display: flex;
+        }
+
+        .info-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            max-width: 850px;
+            width: 100%;
+            overflow: hidden;
+            animation: scaleIn 0.4s ease;
+            position: relative;
+        }
+
+        .info-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            background: rgba(0, 0, 0, 0.7);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .info-close:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        .info-hero {
+            position: relative;
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+            padding: 40px;
+        }
+
+        .info-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(26, 26, 26, 1) 0%, transparent 50%);
+        }
+
+        .info-hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .info-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .info-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .info-match {
+            color: #46d369;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .info-year {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .info-category-badge {
+            background: var(--primary-red);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .info-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .info-btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .info-btn-play {
+            background: white;
+            color: black;
+        }
+
+        .info-btn-play:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .info-btn-secondary {
+            background: rgba(109, 109, 110, 0.7);
+            color: white;
+        }
+
+        .info-btn-secondary:hover {
+            background: rgba(109, 109, 110, 0.5);
+        }
+
+        .info-details {
+            padding: 40px;
+        }
+
+        .info-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin-bottom: 30px;
+        }
+
+        .info-section {
+            margin-bottom: 25px;
+        }
+
+        .info-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .info-value {
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .info-divider {
+            height: 1px;
+            background: var(--hover-bg);
+            margin: 30px 0;
+        }
+
+        /* Hide video data elements */
+        .video-data {
+            display: none;
+        }
+
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -972,10 +1200,89 @@
             .hero-cast {
                 display: none;
             }
+
+            .info-hero {
+                height: 250px;
+                padding: 20px;
+            }
+
+            .info-title {
+                font-size: 1.8rem;
+            }
+
+            .info-details {
+                padding: 20px;
+            }
+
+            .info-buttons {
+                flex-direction: column;
+            }
+
+            .info-btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- ============================================
+         VIDEO DATEN IM HTML DEFINIEREN
+         HIER KANNST DU DEINE VIDEOS HINZUFÜGEN!
+         ============================================ -->
+    
+    <!-- 
+        VIDEO HINZUFÜGEN - ANLEITUNG:
+        1. Kopiere einen <div class="video-data"> Block
+        2. Ändere die data-* Attribute:
+           - data-title: Titel des Videos
+           - data-year: Jahr
+           - data-category: Kategorie (Jahresrückblick, Events, Reisen, Geburtstage)
+           - data-description: Beschreibung
+           - data-video: Pfad zum Video (lokal oder URL)
+           - data-thumbnail: Pfad zum Thumbnail (optional)
+           - data-featured: "true" für Hero-Anzeige (nur ein Video sollte das haben)
+    -->
+    
+    <div id="videoDataContainer">
+        <!-- Video 1: Jahresrückblick 2025 -->
+        <div class="video-data" 
+             data-title="Jahresrückblick 2025"
+             data-year="2025"
+             data-category="Jahresrückblick"
+             data-description="Ein unvergessliches Jahr voller Abenteuer, Lachen und besonderer Momente. Erlebe die Highlights unserer Freundesgruppe in diesem emotionalen Jahresrückblick."
+             data-video="https://github.com/KingCalo1807/2025/releases/download/2025/2025_low-2.mp4"
+             data-thumbnail="thumbnails/2025.png"
+             data-featured="true">
+        </div>
+
+        <!-- Video 2: Ramonski Geburtstag -->
+        <div class="video-data" 
+             data-title="Ramonski Geburtstag"
+             data-year="2025"
+             data-category="Geburtstage"
+             data-description="19 Jahre Ramonski, schau dir das Geburtstagsvideo zu Ramons 19ten Geburtstag an"
+             data-video="https://github.com/KingCalo1807/2025_video/releases/download/v2/Ramonski-4.mp4"
+             data-thumbnail="thumbnails/ramon.png"
+             data-featured="false">
+        </div>
+
+        <!-- 
+        FÜGE HIER WEITERE VIDEOS HINZU:
+        Kopiere einfach den Block oben und ändere die Werte
+        
+        <div class="video-data" 
+             data-title="Dein Video Titel"
+             data-year="2025"
+             data-category="Events"
+             data-description="Deine Beschreibung hier"
+             data-video="videos/dein-video.mp4"
+             data-thumbnail="thumbnails/dein-bild.jpg"
+             data-featured="false">
+        </div>
+        -->
+    </div>
 
     <!-- ============================================
          PROFILE SELECTION SCREEN
@@ -1020,6 +1327,8 @@
             <div class="intro-bar bar-4"></div>
             <div class="intro-bar bar-5"></div>
             <div class="intro-bar bar-6"></div>
+            <div class="intro-bar bar-7"></div>
+            <div class="intro-bar bar-8"></div>
             <div class="intro-logo">F</div>
         </div>
     </div>
@@ -1027,7 +1336,6 @@
     <!-- Intro Sound -->
     <audio id="introSound" preload="auto">
         <source src="sounds/intro.mp3" type="audio/mpeg">
-        <!--<source src="sounds/intro-sound.ogg" type="audio/ogg">-->
     </audio>
 
     <!-- ============================================
@@ -1107,65 +1415,86 @@
                 <div class="video-title" id="videoTitle"></div>
                 <div class="close-video" onclick="closeVideo()">✕</div>
             </div>
-            <video id="videoPlayer" class="video-player" controls>
-                Dein Browser unterstützt das Video-Tag nicht.
-            </video>
+            <div id="videoPlayerContainer"></div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="info-modal" id="infoModal">
+        <div class="info-content">
+            <div class="info-close" onclick="closeInfoModal()">✕</div>
+            <div class="info-hero" id="infoHero">
+                <div class="info-hero-content">
+                    <div class="info-title" id="infoTitle"></div>
+                    <div class="info-meta">
+                        <span class="info-match">98% Match</span>
+                        <span class="info-year" id="infoYear"></span>
+                        <span class="info-category-badge" id="infoCategoryBadge"></span>
+                    </div>
+                    <div class="info-buttons">
+                        <button class="info-btn info-btn-play" id="infoPlayBtn">
+                            <span>▶</span> Abspielen
+                        </button>
+                        <button class="info-btn info-btn-secondary" onclick="addToList('current')">
+                            <span>+</span> Meine Liste
+                        </button>
+                        <button class="info-btn info-btn-secondary" onclick="likeMovie('current')">
+                            <span>👍</span> Gefällt mir
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="info-details">
+                <div class="info-description" id="infoDescription"></div>
+                <div class="info-divider"></div>
+                <div class="info-section">
+                    <div class="info-label">Kategorie:</div>
+                    <div class="info-value" id="infoCategory"></div>
+                </div>
+                <div class="info-section">
+                    <div class="info-label">Jahr:</div>
+                    <div class="info-value" id="infoYearDetail"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         // ============================================
-        // CONFIGURATION - HIER KANNST DU FILME HINZUFÜGEN
+        // CONFIGURATION
         // ============================================
         
         // PASSWORT ÄNDERN (Standard: "2025")
         const CORRECT_PASSWORD = "2025";
 
-        // FILME HINZUFÜGEN - Kopiere einfach einen Film-Block und ändere die Daten
-        const movies = [
-            // Film 1
-            {
-                title: "Jahresrückblick 2025",
-                year: 2025,
-                category: "Jahresrückblick",
-                description: "Ein unvergessliches Jahr voller Abenteuer, Lachen und besonderer Momente. Erlebe die Highlights unserer Freundesgruppe in diesem emotionalen Jahresrückblick.",
-                videoPath: "videos/2025.mp4", // Pfad zu deinem Video
-                thumbnail: "thumbnails/2025.png", // Optional: Pfad zum Thumbnail
-                featured: true // Setze auf true für Featured/Hero Anzeige
-            },
+        // Videos werden jetzt aus dem HTML geladen
+        let movies = [];
 
-            // Film 2
-            {
-                title: "Ramonski Geburtstag",
-                year: 2025,
-                category: "Geburtstage",
-                description: "19 Jahre Ramonski, schau dir das Geburtstagsvideo zu Ramons 19ten Geburtstag an",
-                videoPath: "videos/ramonski.mp4",
-                thumbnail: "thumbnails/ramon.png"
-            },
-
-            
-            // FÜGE HIER NEUE FILME HINZU:
-            // Kopiere einfach den Block oben und ändere die Werte
-            /*
-            {
-                title: "Dein Film Titel",
-                year: 2025,
-                category: "Jahresrückblick", // oder: Events, Reisen, Spaß
-                description: "Eine kurze Beschreibung deines Films",
-                videoPath: "videos/dein-video.mp4",
-                thumbnail: "thumbnails/dein-bild.jpg",
-                featured: true // Optional: für Hero-Section
-            },
-            */
-        ];
+        // Videos aus HTML laden
+        function loadMoviesFromHTML() {
+            const videoDataElements = document.querySelectorAll('.video-data');
+            movies = Array.from(videoDataElements).map(element => ({
+                title: element.getAttribute('data-title'),
+                year: parseInt(element.getAttribute('data-year')),
+                category: element.getAttribute('data-category'),
+                description: element.getAttribute('data-description'),
+                videoPath: element.getAttribute('data-video'),
+                thumbnail: element.getAttribute('data-thumbnail'),
+                featured: element.getAttribute('data-featured') === 'true'
+            }));
+        }
 
         // ============================================
-        // APP LOGIC - NICHT ÄNDERN (außer du weißt was du tust)
+        // APP LOGIC
         // ============================================
         
         let currentFilter = 'all';
         let searchTerm = '';
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMoviesFromHTML();
+        });
 
         // Password Modal
         function showPasswordModal() {
@@ -1230,6 +1559,8 @@
         function setupHeroSection() {
             const featuredMovie = movies.find(m => m.featured) || movies[0];
             
+            if (!featuredMovie) return;
+            
             const heroTitle = document.getElementById('heroTitle');
             const heroYear = document.getElementById('heroYear');
             const heroDescription = document.getElementById('heroDescription');
@@ -1248,12 +1579,17 @@
 
         function playHeroVideo() {
             const featuredMovie = movies.find(m => m.featured) || movies[0];
-            playVideo(featuredMovie.videoPath, featuredMovie.title);
+            if (featuredMovie) {
+                playVideo(featuredMovie.videoPath, featuredMovie.title);
+            }
         }
 
         function showHeroInfo() {
             const featuredMovie = movies.find(m => m.featured) || movies[0];
-            alert(`${featuredMovie.title}\n\nJahr: ${featuredMovie.year}\nKategorie: ${featuredMovie.category}\n\n${featuredMovie.description || 'Keine weitere Beschreibung verfügbar.'}`);
+            if (featuredMovie) {
+                const movieIndex = movies.indexOf(featuredMovie);
+                showInfoModal(movieIndex);
+            }
         }
 
         // Navigation
@@ -1355,11 +1691,21 @@
                         ? `<img src="${movie.thumbnail}" alt="${movie.title}">`
                         : '🎬';
                     
+                    // Escape quotes in attributes
+                    const escapedVideoPath = movie.videoPath.replace(/'/g, "\\'");
+                    const escapedTitle = movie.title.replace(/'/g, "\\'");
+                    
+                    // Random progress for demo (in real app, would come from localStorage)
+                    const progress = Math.floor(Math.random() * 100);
+                    
                     html += `
-                        <div class="movie-card" onclick="playVideo('${movie.videoPath}', '${movie.title}')">
+                        <div class="movie-card" onclick="playVideo('${escapedVideoPath}', '${escapedTitle}')">
                             <div class="movie-thumbnail">
                                 ${thumbnailContent}
                                 <div class="play-icon">▶</div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" style="width: ${progress}%"></div>
+                                </div>
                             </div>
                             <div class="movie-info">
                                 <div class="movie-title">${movie.title}</div>
@@ -1370,9 +1716,10 @@
                             </div>
                             <div class="movie-overlay">
                                 <div class="overlay-buttons">
-                                    <div class="overlay-btn play-btn" onclick="event.stopPropagation(); playVideo('${movie.videoPath}', '${movie.title}')">▶</div>
-                                    <div class="overlay-btn" onclick="event.stopPropagation(); addToList('${movie.title}')">+</div>
-                                    <div class="overlay-btn" onclick="event.stopPropagation(); likeMovie('${movie.title}')">👍</div>
+                                    <div class="overlay-btn play-btn" onclick="event.stopPropagation(); playVideo('${escapedVideoPath}', '${escapedTitle}')">▶</div>
+                                    <div class="overlay-btn" onclick="event.stopPropagation(); addToList('${escapedTitle}')">+</div>
+                                    <div class="overlay-btn" onclick="event.stopPropagation(); likeMovie('${escapedTitle}')">👍</div>
+                                    <div class="overlay-btn" onclick="event.stopPropagation(); showInfoModal(${movies.indexOf(movie)})">ℹ</div>
                                 </div>
                                 <div class="overlay-info">
                                     ${movie.description ? movie.description.substring(0, 80) + '...' : ''}
@@ -1394,21 +1741,28 @@
         // Video Player
         function playVideo(videoPath, title) {
             const modal = document.getElementById('videoModal');
-            const player = document.getElementById('videoPlayer');
             const videoTitle = document.getElementById('videoTitle');
+            const container = document.getElementById('videoPlayerContainer');
             
             videoTitle.textContent = title;
-            player.src = videoPath;
+            
+            // Create video element directly in HTML
+            container.innerHTML = `
+                <video class="video-player" controls autoplay>
+                    <source src="${videoPath}" type="video/mp4">
+                    Dein Browser unterstützt kein HTML5-Video.
+                </video>
+            `;
+            
             modal.classList.add('active');
-            player.play();
         }
 
         function closeVideo() {
             const modal = document.getElementById('videoModal');
-            const player = document.getElementById('videoPlayer');
+            const container = document.getElementById('videoPlayerContainer');
             
-            player.pause();
-            player.src = '';
+            // Remove video element
+            container.innerHTML = '';
             modal.classList.remove('active');
         }
 
@@ -1421,17 +1775,59 @@
             alert(`Dir gefällt "${title}"! 👍`);
         }
 
-        // Close video on Escape key
+        // Info Modal Functions
+        let currentInfoMovie = null;
+
+        function showInfoModal(movieIndex) {
+            currentInfoMovie = movies[movieIndex];
+            const modal = document.getElementById('infoModal');
+            
+            // Set content
+            document.getElementById('infoTitle').textContent = currentInfoMovie.title;
+            document.getElementById('infoYear').textContent = currentInfoMovie.year;
+            document.getElementById('infoCategoryBadge').textContent = currentInfoMovie.category;
+            document.getElementById('infoDescription').textContent = currentInfoMovie.description || 'Keine Beschreibung verfügbar.';
+            document.getElementById('infoCategory').textContent = currentInfoMovie.category;
+            document.getElementById('infoYearDetail').textContent = currentInfoMovie.year;
+            
+            // Set background image
+            const infoHero = document.getElementById('infoHero');
+            if (currentInfoMovie.thumbnail) {
+                infoHero.style.backgroundImage = `url(${currentInfoMovie.thumbnail})`;
+            } else {
+                infoHero.style.background = 'linear-gradient(135deg, #2a2a2a, #1a1a1a)';
+            }
+            
+            // Set play button action
+            document.getElementById('infoPlayBtn').onclick = function() {
+                closeInfoModal();
+                playVideo(currentInfoMovie.videoPath, currentInfoMovie.title);
+            };
+            
+            modal.classList.add('active');
+        }
+
+        function closeInfoModal() {
+            const modal = document.getElementById('infoModal');
+            modal.classList.remove('active');
+            currentInfoMovie = null;
+        }
+
+        // Close modals on Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const videoModal = document.getElementById('videoModal');
                 const passwordModal = document.getElementById('passwordModal');
+                const infoModal = document.getElementById('infoModal');
                 
                 if (videoModal.classList.contains('active')) {
                     closeVideo();
                 }
                 if (passwordModal.classList.contains('active')) {
                     closePasswordModal();
+                }
+                if (infoModal.classList.contains('active')) {
+                    closeInfoModal();
                 }
             }
         });
